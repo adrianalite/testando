@@ -1,4 +1,4 @@
-#acessando a api de dados
+acessando a api de dados
 url = 'https://brasilapi.com.br/api/cvm/corretoras/v1'
 import requests as rq
 resposta = rq.get(url)
