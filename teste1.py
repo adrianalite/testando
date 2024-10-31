@@ -1,43 +1,51 @@
-#versao completa com colunas
-import streamlit as st
+import requests as rq
 import pandas as pd
+import streamlit as st
 
-st.title('Localização das comunidades quilombolas (2022)')
-df = pd.read_csv('https://raw.githubusercontent.com/adrianalite/datasets/main/BR_LQs_CD2022.csv')
+#identificando as mulheres
 
-#limpando os dados
-df.fillna(0, inplace=True)
-df.drop(columns=['Unnamed: 0'], inplace=True)
-list = ['Lat_d', 'Long_d']
-#convertendo para numeros
-df[list] = df[list].apply(pd.to_numeric, errors='coerce')
-#df.rename(columns={'Lat_d': 'LATITUDE', 'Long_d':'LONGITUDE'}, inplace=True)
+url = 'https://dadosabertos.camara.leg.br/api/v2/deputados?siglaSexo=F&ordem=ASC&ordenarPor=nome'
+resposta = rq.get(url)
+dadosJSON = resposta.json()
+dfMulheres = pd.DataFrame(dadosJSON['dados'])
+dfMulheres['sexo'] = 'F'
 
-estados = df['NM_UF'].unique()
-estadoFiltro = st.selectbox(
-    'Qual estado selecionar?',
-     estados)
-dadosFiltrados = df[df['NM_UF'] == estadoFiltro]
-if st.checkbox('Mostrar tabela'):
-  st.write(dadosFiltrados)
-#st.map(dadosFiltrados)
+#identificando os homens
+url = 'https://dadosabertos.camara.leg.br/api/v2/deputados?siglaSexo=M&ordem=ASC&ordenarPor=nome'
+resposta = rq.get(url)
+dadosJSON = resposta.json()
+dfHomens = pd.DataFrame(dadosJSON['dados'])
+dfHomens['sexo'] = 'M'
 
-st.map(dadosFiltrados, latitude="Lat_d", longitude="Long_d")
-#st.map(df, latitude="Lat_d", longitude="Long_d", size="col3", color="col4")
+#unindo os dataframes
+df = pd.concat([dfMulheres, dfHomens])
 
-#dados sobre estatística descritiva
-qtdeMunicipios = len(df['NM_MUNIC'].unique())
-qtdeComunidades = len(df['NM_AGLOM'].unique())
+#Filtrando df por sexo
+#inserindo um selectbox
+opcao = st.selectbox(
+    'Qual o sexo?',
+     df['sexo'].unique())
 
-#criando duas colunas para os dados
-colunas = st.columns(2)
-colunas[0].metric('# Municípios', len(df['NM_MUNIC'].unique()))
-colunas[1].metric('# Comunidades', len(df['NM_AGLOM'].unique()))
+dfFiltrado = df[df['sexo'] == opcao]
+st.title('Deputados do sexo ' + opcao)
 
-#número de comunidades por estado
-st.header('Número de comunidades por UF')
-st.bar_chart(df['NM_UF'].value_counts())
+#ocorrencias totais
+#procurando no chat GPT: Como calcular a quantidade de deputados por estado?
+ocorrencias = dfFiltrado['siglaUf'].value_counts()
+dfEstados = pd.DataFrame({
+    'siglaUf': ocorrencias.index,
+    'quantidade': ocorrencias.values}
+    )
 
-#os dez municípios com mais comunidades
-st.header('Os dez municípios com mais comunidades quilombolas')
-st.bar_chart(df['NM_MUNIC'].value_counts()[:10])
+#total de homens
+totalHomens = dfHomens['id'].count()
+st.metric('Total de Homens', totalHomens)
+
+#total de mulheres
+totalMulheres = dfMulheres['id'].count()
+st.metric('Total de Mulheres', totalMulheres)
+
+st.write('Total de deputadas do sexo ' + opcao)
+st.bar_chart(dfEstados, x = 'siglaUf', y = 'quantidade', x_label='Siglas dos estados', y_label='Quantidade de deputados')
+
+st.dataframe(dfFiltrado)
