@@ -1,11 +1,14 @@
-acessando a api de dados
+import requests as req
+import pandas as pd
+import streamlit as st
+import matplotlib.pyplot as plt
+
+#acessando a api de dados
 url = 'https://brasilapi.com.br/api/cvm/corretoras/v1'
-import requests as rq
-resposta = rq.get(url)
+resposta = req.get(url)
 dadosJSON = resposta.json()
 
 #criando o dataframe
-import pandas as pd
 df = pd.DataFrame(dadosJSON)
 
 #selecionando os campos do dataframe
@@ -41,9 +44,6 @@ dfFiltrado['regiao'] = classificacoes
 dfFiltrado = dfFiltrado[(dfFiltrado != '').all(axis=1)]
 
 #criando o dashboard
-import streamlit as st
-import matplotlib.pyplot as plt
-
 st.title('Corretoras do Brasil')
 
 fig1, ax = plt.subplots()
