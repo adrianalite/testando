@@ -22,4 +22,6 @@ qtdeComunidades = len(df['NM_AGLOM'].unique())
 colunas = st.columns(2)
 colunas[0].metric('# Municípios', len(df['NM_MUNIC'].unique()))
 colunas[1].metric('# Comunidades', len(df['NM_AGLOM'].unique()))
+st.header('Número de comunidades por UF')
+st.bar_chart(df['NM_UF'].value_counts())
 
