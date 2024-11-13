@@ -17,4 +17,9 @@ dadosFiltrados = df[df['NM_UF'] == estadoFiltro]
 if st.checkbox('Mostrar tabela'):
   st.write(dadosFiltrados)
 st.map(dadosFiltrados, latitude="Lat_d", longitude="Long_d")
+qtdeMunicipios = len(df['NM_MUNIC'].unique())
+qtdeComunidades = len(df['NM_AGLOM'].unique())
+colunas = st.columns(2)
+colunas[0].metric('# Municípios', len(df['NM_MUNIC'].unique()))
+colunas[1].metric('# Comunidades', len(df['NM_AGLOM'].unique()))
 
