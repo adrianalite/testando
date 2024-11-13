@@ -24,4 +24,6 @@ colunas[0].metric('# Municípios', len(df['NM_MUNIC'].unique()))
 colunas[1].metric('# Comunidades', len(df['NM_AGLOM'].unique()))
 st.header('Número de comunidades por UF')
 st.bar_chart(df['NM_UF'].value_counts())
+st.header('Os dez municípios com mais comunidades quilombolas')
+st.bar_chart(df['NM_MUNIC'].value_counts()[:10])
 
