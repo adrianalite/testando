@@ -12,4 +12,7 @@ st.write(df)
 opcao = st.selectbox('Qual servidor você gostaria de selecionar?',
              df['nomeServidor'])
 
-st.write(opcao)
+#st.write(opcao)
+
+dadosFiltrados = df[df['nomeServidor'] == opcao]
+st.write(dadosFiltrados)
