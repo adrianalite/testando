@@ -1,3 +1,9 @@
+import streamlit as st
+import pandas as pd
+
+st.title('Localizaçao das comunidades quilombolas (2022)')
+df = pd.read_csv('https://raw.githubusercontent.com/adrianalite/datasets/main/BR_LQs_CD2022.csv')
+
 #df.drop(columns=['Unnamed: 0'], inplace=True)
 list = ['Lat_d', 'Long_d']
 # convertendo para numeros
