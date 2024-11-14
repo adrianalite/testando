@@ -21,3 +21,4 @@ if st.checkbox('Mostrar tabela') == True:
   st.write(dadosFiltrados)
 
 st.map(dadosFiltrados, latitude = 'Lat_d', longitude = 'Long_d')
+st.bar_chart(df['NM_UF'].value_counts())
