@@ -1,18 +1,15 @@
 import streamlit as st
 import pandas as pd
 
-df = pd.DataFrame({
-    'nomeServidor':[ 'Adriana', 'Thais', 'Samara'],
-    'salario':[10000,25000,20000]
-}   
-)
-st.write('Criando uma tabela')
-st.write(df)
+st.title('Localização das comunidades quilombolas (2022)')
+df = pd.read_csv('https://raw.githubusercontent.com/adrianalite/datasets/main/BR_LQs_CD2022.csv')
 
-opcao = st.selectbox('Qual servidor você gostaria de selecionar?',
-             df['nomeServidor'])
+#retirar o Unnamed
+df.drop(columns=['Unnamed: 0'], inplace = True)
 
-#st.write(opcao)
+#converter lat e long para numeros
+list =['Lat_d', 'Long_d']
+df[list] = df[list].apply(pd.to_numeric, errors = 'coerce')
 
-dadosFiltrados = df[df['nomeServidor'] == opcao]
-st.write(dadosFiltrados)
+estados = df['NM_UF'].unique()
+st.selectbox('Qual estado selecionar?', estados)
