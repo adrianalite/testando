@@ -11,5 +11,9 @@ df.drop(columns=['Unnamed: 0'], inplace = True)
 list =['Lat_d', 'Long_d']
 df[list] = df[list].apply(pd.to_numeric, errors = 'coerce')
 
+#os estados não são repetidos
 estados = df['NM_UF'].unique()
-st.selectbox('Qual estado selecionar?', estados)
+estadoSelecionado = st.selectbox('Qual estado selecionar?', estados)
+
+dadosFiltrados = df[df['NM_UF'] == estadoSelecionado]
+st.write(dadosFiltrados)
