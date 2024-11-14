@@ -16,4 +16,6 @@ estados = df['NM_UF'].unique()
 estadoSelecionado = st.selectbox('Qual estado selecionar?', estados)
 
 dadosFiltrados = df[df['NM_UF'] == estadoSelecionado]
-st.write(dadosFiltrados)
+
+if st.checkbox('Mostrar tabela') == True:
+  st.write(dadosFiltrados)
